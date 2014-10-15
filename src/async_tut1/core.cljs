@@ -15,7 +15,7 @@
     (events/listen el type
        (fn [e] (put! out e)))
     out))
-
+ 
 (defn jsonp [uri]
   (let [out (chan)
     req (Jsonp. (Uri. uri))]
@@ -36,6 +36,7 @@
           (let [[_ results] (<! (jsonp (query-url (user-query))))]
             (set! (.-innerHTML results-view) (render-query results)))))))
 
+;; Strings the given results together into an unordered list
 (defn render-query [results]
   (str
     "<ul>"
@@ -44,12 +45,17 @@
              (str "<li>" result "</li>")))
     "</ul>"))
 
+;; Calls the init function
 (init)
 
+;; Defaults println to print to the browser console.  The exclamation point is a style guide suggestion
+;;	which indicates this function is not pure and not safe in STM transactions (modifying state)
 (enable-console-print!)
 
+;; Prints Hello World to the console using Clojure println
 (println "Hello world!")
 
+;; Queries for the DOM element with id of "query" and logs to console (uses JS logging)
 (.log js/console (dom/getElement "query"))
 
 (let [clicks (listen (dom/getElement "search") "click")]
